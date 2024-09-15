@@ -30,8 +30,8 @@ jobs:
         uses: actions/checkout@main
         with:
           token: ${{ secrets.GH_TOKEN }}
-          repository: hdu-dn11/metadata
-          path: old-metadata
+          repository: dn-11/metadata
+          path: metadata.old
           sparse-checkout: |
             dn11.zone
           sparse-checkout-cone-mode: false
@@ -41,15 +41,21 @@ jobs:
           python3 script/generator.py
       - name: Upload Metadata to GitHub
         run: |
-          cd metadata-repo
+          cd metadata
+          mv monitor-metadata.json ..
           git init
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add *
           git commit -m "Sync"
           git branch -M main
-          git remote add origin https://${{ secrets.GH_TOKEN }}@github.com/hdu-dn11/metadata.git
+          git remote add origin https://${{ secrets.GH_TOKEN }}@github.com/dn-11/metadata.git
           git push --force -u origin main
+      - name: Prepare for COS Upload
+        run: |
+          cd metadata
+          rm -rf .git README.md
+          mv ../monitor-metadata.json .
       - name: Upload Monitor-Metadata to COS
         timeout-minutes: 5
         uses: TencentCloud/cos-action@v1
@@ -58,17 +64,6 @@ jobs:
           secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
           cos_bucket: ${{ secrets.COS_BUCKET }}
           cos_region: ${{ secrets.COS_REGION }}
-          local_path: 'monitor-metadata'
-          remote_path: 'as'
-          clean: true
-      - name: Upload ROA to COS
-        timeout-minutes: 5
-        uses: TencentCloud/cos-action@v1
-        with:
-          secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
-          secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-          cos_bucket: ${{ secrets.COS_BUCKET }}
-          cos_region: ${{ secrets.COS_REGION }}
-          local_path: 'metadata-repo/dn11_roa_bird2.conf'
-          remote_path: 'dn11_roa_bird2.conf'
+          local_path: 'metadata'
+          remote_path: ''
           clean: false

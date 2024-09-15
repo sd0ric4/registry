@@ -1,0 +1,16 @@
+- name: GoldenSheep
+  ip: 172.16.7.53
+- name: TypeScript
+  ip: 172.16.3.53
+- name: Iraze
+  ip: 172.16.2.13
+- name: Potat0
+  ip: 10.18.0.53
+- name: Hakuya
+  ip: 100.64.0.1
+- name: BaiMeow
+  ip: 172.16.4.6
+- name: Daidr
+  ip: 172.16.33.53
+- name: ibbbb
+  ip: 172.16.12.11

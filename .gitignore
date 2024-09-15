@@ -1,2 +1,3 @@
-/monitor-metadata
-/metadata-repo
+/metadata
+/metadata.old
+*.pyc
